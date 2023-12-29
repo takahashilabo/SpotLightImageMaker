@@ -7,6 +7,7 @@ let arr = [];
 let p = null;
 let layer;
 let fname = "";
+let mode = "e";
 
 function setup() {
   pixelDensity(1);
@@ -20,7 +21,11 @@ function draw() {
 
   layer.erase();
   for (let a of arr) {
-    layer.ellipse(a[0], a[1], a[2], a[3]);
+    if (a[0] == "e") {
+      layer.ellipse(a[1], a[2], a[3], a[4]);
+    } else {
+      layer.rect(a[1], a[2], a[3], a[4]);
+    }
   }
   layer.noErase();
 
@@ -30,17 +35,23 @@ function draw() {
   if (p) {
     stroke(0);
     noFill();
-    ellipse(p.x + (mouseX - p.x) / 2, p.y + (mouseY - p.y) / 2, abs(p.x - mouseX), abs(p.y - mouseY));
+    if (mode == "e") {
+      ellipse(p.x + (mouseX - p.x) / 2, p.y + (mouseY - p.y) / 2, abs(p.x - mouseX), abs(p.y - mouseY));
+    } else {
+      rect(p.x, p.y, abs(p.x - mouseX), abs(p.y - mouseY));
+    }
   }
 
   if (help) {
     textSize(16);
     fill(255, 255, 0);
     noStroke();
-    rect(0, 0, width, 40);
+    rect(0, 0, width, 110);
     fill(0);
-    text("操作キー　明度(Q:アップ, A:ダウン) ESC:取消 S:保存", 0, 30);
-    if (++help_c > 200) help = false;
+    text("明度(Q:アップ, A:ダウン) ", 10, 30);
+    text("E:楕円 R:長方形", 10, 60);
+    text("ESC:取消 S:保存", 10, 90);
+    if (++help_c > 250) help = false;
   }
 }
 
@@ -51,7 +62,11 @@ function mousePressed() {
 
 function mouseReleased() {
   if (!img) return;
-  arr.push([p.x + (mouseX - p.x) / 2, p.y + (mouseY - p.y) / 2, abs(p.x - mouseX), abs(p.y - mouseY)]);
+  if (mode == "e") {
+    arr.push([mode, p.x + (mouseX - p.x) / 2, p.y + (mouseY - p.y) / 2, abs(p.x - mouseX), abs(p.y - mouseY)]);
+  } else {
+    arr.push([mode, p.x, p.y, abs(p.x - mouseX), abs(p.y - mouseY)]);
+  }
   p = null;
 }
 
@@ -87,7 +102,15 @@ function keyPressed() {
     if ((b -= 5) < 0) b = 0;
     resetLayer(width, height);
   }
-  
+
+  if (key == 'e' || key == 'E') {
+    mode = "e";
+  } 
+
+  if (key == 'r' || key == 'R') {
+    mode = "r";
+  } 
+
   if (key == 's' || key == 'S') {
     const ext = fname.slice(fname.lastIndexOf("."));
     const name = fname.slice(0, fname.lastIndexOf("."));
