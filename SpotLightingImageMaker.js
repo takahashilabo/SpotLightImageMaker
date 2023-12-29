@@ -9,6 +9,7 @@ let layer;
 let fname = "";
 
 function setup() {
+  pixelDensity(1);
   createCanvas(400, 400);
   input = createFileInput(handleFile);
   input.position(0, 0);
@@ -96,7 +97,7 @@ function keyPressed() {
 
 function resetLayer(w, h) {
   layer.clear();
-  layer.noStroke();
   layer.fill(0, b);
+  layer.noStroke();
   layer.rect(0, 0, w, h);
 }
